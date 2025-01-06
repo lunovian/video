@@ -2,13 +2,12 @@ from manim import *
 import numpy as np
 
 class NeuralNetworkScene(Scene):
-    def create_curve(self, start, end):
-        # Helper method to create smooth curves
-        control1 = start + np.array([1.0, 0, 0])
-        control2 = end + np.array([-1.0, 0, 0])
-        return VMobject().set_points_smoothly([start, control1, control2, end])
-
     def construct(self):
+        # Create title text
+        title = Text("A Simple Neural Network", font_size=36)
+        title.to_edge(UP, buff=0.3)
+        self.play(Write(title))
+
         # Create layers using circles with different colors
         input_layer = VGroup(*[
             Circle(radius=0.3, fill_opacity=0.4, color=BLUE) 
@@ -32,19 +31,27 @@ class NeuralNetworkScene(Scene):
         connections1 = VGroup()
         connections2 = VGroup()
 
-        # Connect input to hidden layer with curved lines
+        # Connect input to hidden layer with straight lines
         for i in input_layer:
             for h in hidden_layer:
-                curve = self.create_curve(i.get_right(), h.get_left())
-                curve.set_stroke(opacity=0.3, width=2)
-                connections1.add(curve)
+                line = Line(
+                    start=i.get_right(),  # Fixed typo: changed from gFet_right to get_right
+                    end=h.get_left(),
+                    stroke_opacity=0.3,
+                    stroke_width=2
+                )
+                connections1.add(line)
 
-        # Connect hidden to output layer with curved lines
+        # Connect hidden to output layer with straight lines
         for h in hidden_layer:
             for o in output_layer:
-                curve = self.create_curve(h.get_right(), o.get_left())
-                curve.set_stroke(opacity=0.3, width=2)
-                connections2.add(curve)
+                line = Line(
+                    start=h.get_right(),
+                    end=o.get_left(),
+                    stroke_opacity=0.3,
+                    stroke_width=2
+                )
+                connections2.add(line)
 
         # Smoother animation sequence
         self.play(
